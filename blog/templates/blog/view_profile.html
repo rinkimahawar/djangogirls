@@ -1,0 +1,9 @@
+{% extends 'blog.html' %}
+{% block content %}
+  <h1>Profile_view</h1>
+  <p>Username: {{ user.username }}</p>
+  <p>First name: {{ user.first_name }}</p>
+  <p>Last name: {{ user.last_name }}</p>
+  <p>Email: {{ user.email }}</p>
+  <p>image: {{ user.image }}</p>
+{% endblock %}
