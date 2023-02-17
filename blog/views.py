@@ -2,17 +2,15 @@ from django.shortcuts import render,get_object_or_404
 from django.template.defaultfilters import slugify
 from django.shortcuts import redirect, render
 from datetime import datetime
-from blog.forms import (EditProfileForm)
 from django.contrib.auth import update_session_auth_hash
 from django.utils import timezone
-from .models import Post, User, Comment,Category
-from .forms import UserForm,PostForm,CommentForm
+from .models import Post, User,Category
 from taggit.models import Tag
 from django.contrib.auth import login,authenticate,logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from .forms import *
 
 
 
@@ -47,7 +45,7 @@ def post_edit(request, pk):
             post.user = request.user
             post.published_date = timezone.now()
             post.save()
-            return redirect('post_detail', pk=post.pk)
+            return redirect('blog:post_detail', pk=post.pk)
     else:
         form = PostForm(instance=post)
     return render(request, 'blog/post_edit.html', {'form': form})
@@ -91,27 +89,27 @@ def logout_request(request):
 
 
  #Update it here
-@login_required
-def profile(request):
-    if request.method == 'POST':
-        u_form = UserUpdateForm(request.POST, instance=request.user)
-        p_form = ProfileUpdateForm(request.POST,request.FILES,instance=request.user.profile)
-        if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
-            p_form.save()
-            messages.success(request, f'Your account has been updated!')
-            return redirect('profile') # Redirect back to profile page
+# @login_required
+# def profile(request):
+#     if request.method == 'POST':
+#         u_form = UserUpdateForm(request.POST, instance=request.user)
+#         p_form = ProfileUpdateForm(request.POST,request.FILES,instance=request.user.profile)
+#         if u_form.is_valid() and p_form.is_valid():
+#             u_form.save()
+#             p_form.save()
+#             messages.success(request, f'Your account has been updated!')
+#             return redirect('profile') # Redirect back to profile page
 
-    else:
-         u_form = UserUpdateForm(instance=request.user)
-         p_form = ProfileUpdateForm(instance=request.user.profile)
+#     else:
+#          u_form = UserUpdateForm(instance=request.user)
+#          p_form = ProfileUpdateForm(instance=request.user.profile)
 
-    context = {
-         'u_form': u_form,
-         'p_form': p_form
-     }
+#     context = {
+#          'u_form': u_form,
+#          'p_form': p_form
+#      }
 
-    return render(request, 'blog/profile.html', context)
+#     return render(request, 'blog/profile.html', context)
 
 def profile_view(request):
     user = request.user
@@ -187,6 +185,7 @@ def tagged(request, slug):
         'posts':posts,
     }
     return render(request, 'home.html', context)   
+
 
 def get_context_data(self , **kwargs):
     data = get_context_data(**kwargs)

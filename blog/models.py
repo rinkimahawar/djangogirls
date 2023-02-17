@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.db import models
 from taggit.managers import TaggableManager
+from autoslug import AutoSlugField
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.utils import timezone
@@ -66,7 +67,7 @@ class Post(models.Model):
     draft = models.BooleanField(default=False)
     # publish = models.DateField(auto_now=False,auto_now_add=False,)
     # slug = models.SlugField(unique=True)
-    tags = TaggableManager()
+    Tags = TaggableManager()
 
 
     def __str__(self):
@@ -96,9 +97,17 @@ class Blog(models.Model):
     author = models.ForeignKey(PublishingUser, on_delete= models.CASCADE , related_name='blog_posts')
     description = models.CharField(max_length=300, null=True)
     content = models.TextField()
-
+    Tags= TaggableManager()
+    
     def __str__(self):
         return self.title
+
+class Tags(models.Model):
+    name = models.CharField(max_length=40)
+    slug = AutoSlugField(populate_from='name',unique=True)
+    def __str__(self):
+        return self.name
+
 
 class Comment(models.Model):
     CommentPost = models.ForeignKey(Blog , on_delete=models.CASCADE)

@@ -11,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title','text','category','tags')
+        fields = ('title','text','category','Tags')
 
 
 class UserForm(forms.ModelForm):
@@ -43,7 +43,7 @@ class ProfileUpdateForm(forms.ModelForm):
         model = Profile
         fields = ['image']  
            
-class EditProfileForm(ModelForm):
+class EditProfileForm(forms.ModelForm):
         class Meta:
             model = User
             fields = ('email','first_name','last_name')
