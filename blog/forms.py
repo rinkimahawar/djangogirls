@@ -4,14 +4,15 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm,UserChangeForm
 from django.forms import ModelForm
 # from .models import UserProfile
-from .models import Profile
+# from .models import Profile
 from .models import Post, User,Comment
 from django.utils.translation import gettext_lazy as _
+from .models import Category,Tags
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title','text','category','Tags')
+        fields = ('title','text','category','tag')
 
 
 class UserForm(forms.ModelForm):
@@ -19,7 +20,7 @@ class UserForm(forms.ModelForm):
     # confirm_Password = forms.CharField(Widget = forms.PasswordInput)
     class Meta:
         model = User
-        fields = ('first_name','last_name','username','email','password','city','country','image','gender')
+        fields = ('first_name','last_name','username','email','password','city','country','image','phoneNumber')
         #fields = '__all__'
 
 class UserRegisterForm(UserCreationForm):
@@ -40,7 +41,7 @@ class UserUpdateForm(forms.ModelForm):
 # Create a ProfileUpdateForm to update image.
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
-        model = Profile
+        model = User
         fields = ['image']  
            
 class EditProfileForm(forms.ModelForm):
@@ -50,15 +51,17 @@ class EditProfileForm(forms.ModelForm):
 
 class CommentForm(forms.ModelForm):
     class Meta:
-        model = Comment
+        model=Comment
+        fields = ('content','name','email',)
         
+        
+# class CategoryForm(forms.ModelForm):
+#     class Meta:
+#         model = Category
+#         fields = ['name']
 
-        fields = ['content','parent']
-        
-        labels = {
-            'content': _(''),
-        }
-        
-        widgets = {
-            'content' : forms.TextInput(),
-        }
+
+# class TagForm(forms.ModelForm):
+#     class Meta:
+#         model = Tags
+#         fields = ['name']
