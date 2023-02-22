@@ -12,7 +12,7 @@ from .models import Category,Tags
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title','text','category','tag')
+        fields = ('title','text','category','tag','image','thumbimage')
 
 
 class UserForm(forms.ModelForm):
@@ -52,7 +52,7 @@ class EditProfileForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model=Comment
-        fields = ('content','name','email',)
+        fields = ('name','email','content')
         
         
 # class CategoryForm(forms.ModelForm):

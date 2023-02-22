@@ -30,11 +30,19 @@ def post_new(request):
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
     comments = Comment.objects.filter(post=post)
+    print(comments)
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
+            try :
+                parent = request.POST.get('comment_id')
+                parent = Comment.objects.filter(id = parent).last()
+                print(parent, 'parent instanceeeee')
+            except:
+                parent=None
             comments = form.save(commit=False)
             comments.post = post
+            comments.parent = parent
             comments.save()
         return redirect('blog:post_detail', slug=post.slug)
     else:

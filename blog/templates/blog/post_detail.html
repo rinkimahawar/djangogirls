@@ -7,6 +7,8 @@
             {% include './icons/pencil-fill.svg' %}
         </a>
     </aside>
+    <img src="{{ post.image.url }}" class="rounded featured-image-list" alt="{{post.title}}" width="800" height="600">
+    <img src="{{ post.thumbimage.url }}" class = "rounded-circle" width="150" height="150">
     {% if post.published_date %}
     <time class="date">
         {{ post.published_date }}
@@ -19,15 +21,47 @@
     {% for tag in post.tag.all %}
         <p>{{ tag }}</p>
     {% endfor %}
-    <h4>Comment</h4>
+    <h4></h4>
     {% for comment in comments %}
+    <h5>comment</h5>
         <div class="comment">
+            <div class="w-50 p-3">
             <form method="post" class="post-form">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="comment">Add comment</button>
             </form>
+            </div>
         </div>
+        {% if user.is_authenticated %}
+            <form action="" method="POST" id="main_form" class="comment_form">
+        <div>
+             <label for="comment">Type Comment here</label>
+            {{ comment_form.content }} {% csrf_token %} <input type="submit" value="Post"></div>
+        </div>
+            </form>
+        {% else %} <h2>You need to Login to comment</h2> 
+        {% endif %}
+
+        {% if comment.is_parent %}
+        <h3> <b>{{ comment.name}} : </b> {{ comment.content }}</h3> 
+         &nbsp; &nbsp; &nbsp;
+        <form action="" method="POST" id="main_form" class="comment_form">
+            <div class="reply">
+                <div class="w-50 p-3">
+                <form method="post" class="post-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="reply">Add reply</button>
+                </form>
+                
+            </div>
+        </form>
+        {% endif %} 
+         
+        {% for replies in comment.children %}
+            <h3>&nbsp; &nbsp; &nbsp; <b>{{ comment.author }} : </b> {{ replies.content }}</h3>
+        {% endfor %}
     {% endfor %}
 </article>
 {% endblock %}   

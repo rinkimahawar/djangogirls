@@ -43,6 +43,8 @@ class Post(models.Model):
     draft = models.BooleanField(default=False)
     tag = models.ManyToManyField(Tags)
     slug = AutoSlugField(populate_from='title',unique=True)
+    image = models.ImageField(upload_to='image/%Y/%m/%d/')
+    thumbimage = models.ImageField(upload_to='thumbimage/%Y/%m/%d/')
 
 
     def __str__(self):
@@ -55,9 +57,20 @@ class Comment(models.Model):
     content = models.TextField()
     date_posted = models.DateTimeField(default=now)
     email = models.EmailField(max_length=44,null=True,blank=True)
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
     
     class Meta:
         ordering=['-date_posted']
-        
+
     def __str__(self):
         return self.name
+
+    @property
+    def children(self):
+        return Comment.objects.filter(parent=self).reverse()
+
+    @property
+    def is_parent(self):
+        if self.parent is None:
+            return True
+        return False           
