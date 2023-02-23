@@ -1,15 +1,20 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-    {% for post in post %}
-        <article class="post">
-            <time class="date">
-                {{ post.published_date }}
-            </time>
-            <h2><a  href="{% url 'blog:post_detail' slug=post.slug %}">{{ post.title }}</a></h2>
-            <p>{{ post.text|linebreaksbr }}</p>
-        </article>    
-    {% endfor %}
+    <article class="row">
+        {% for post in post %}
+             <div class="col-6">   
+                <div class="card">
+                    <img src="{{ post.thumbimage.url }}" class="img-fluid max-width: 100% and height: auto;" alt="{{ post.title }}">
+                    <div class="card-body">
+                        <h2><a  href="{% url 'blog:post_detail' slug=post.slug %}">{{ post.title }}</a></h2>
+                        <p>{{ post.category }}</p> 
+                        <p>{{ post.text|linebreaksbr }}</p>
+                    </div>
+                </div>
+            </div> 
+        {% endfor %}
+    </article>   
 {% endblock %}
 
 

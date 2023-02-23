@@ -43,8 +43,8 @@ class Post(models.Model):
     draft = models.BooleanField(default=False)
     tag = models.ManyToManyField(Tags)
     slug = AutoSlugField(populate_from='title',unique=True)
-    image = models.ImageField(upload_to='image/%Y/%m/%d/')
-    thumbimage = models.ImageField(upload_to='thumbimage/%Y/%m/%d/')
+    image = models.ImageField(upload_to='image/')
+    thumbimage = models.ImageField(upload_to='thumbimage/')
 
 
     def __str__(self):

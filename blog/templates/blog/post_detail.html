@@ -1,67 +1,80 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-<article class="post">
+<article class="post w-80">
     <aside class="actions">
         <a class="btn btn-primary" href="{% url 'blog:post_edit' slug=post.slug %}" class="top-menu">
             {% include './icons/pencil-fill.svg' %}
         </a>
     </aside>
-    <img src="{{ post.image.url }}" class="rounded featured-image-list" alt="{{post.title}}" width="800" height="600">
-    <img src="{{ post.thumbimage.url }}" class = "rounded-circle" width="150" height="150">
-    {% if post.published_date %}
-    <time class="date">
-        {{ post.published_date }}
-    </time>
-    {% endif %}
-    <h2>{{ post.title }}</h2>
-    <h4>{{ post.category }}</h4>
+    <img src="{{ post.image.url }}" class="rounded featured-image-list w-100" alt="{{post.title}}" width="600" height="200">
+    <div class="row d-flex float-end">
+        {% if post.published_date %}
+        <time class="date">
+            {{ post.published_date }}
+        </time>
+        {% endif %}
+    </div>
+    <div class="row d-flex flex-row mt-3">
+        <div class="col-md-1">
+            <img src="{{ post.thumbimage.url }}" class="rounded-circle img-fluid" >
+        </div>
+        
+        <div class=" col-md-6">
+            <h2>{{ post.title }}</h2>
+            <h4>{{ post.category }}</h4>
+        </div>
+    </div>
+
+  
+   
     <p>{{ post.text|linebreaksbr }}</p>
     <h5>Tags</h5>
     {% for tag in post.tag.all %}
-        <p>{{ tag }}</p>
+    <p>{{ tag }}</p>
     {% endfor %}
     <h4></h4>
     {% for comment in comments %}
     <h5>comment</h5>
-        <div class="comment">
-            <div class="w-50 p-3">
+    <div class="comment">
+        <div class="w-50 p-3">
             <form method="post" class="post-form">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="comment">Add comment</button>
             </form>
-            </div>
         </div>
-        {% if user.is_authenticated %}
-            <form action="" method="POST" id="main_form" class="comment_form">
+    </div>
+    {% if user.is_authenticated %}
+    <form action="" method="POST" id="main_form" class="comment_form">
         <div>
-             <label for="comment">Type Comment here</label>
-            {{ comment_form.content }} {% csrf_token %} <input type="submit" value="Post"></div>
+            <label for="comment">Type Comment here</label>
+            {{ comment_form.content }} {% csrf_token %} <input type="submit" value="Post">
         </div>
-            </form>
-        {% else %} <h2>You need to Login to comment</h2> 
-        {% endif %}
+        </div>
+    </form>
+    {% else %} <h2>You need to Login to comment</h2>
+    {% endif %}
 
-        {% if comment.is_parent %}
-        <h3> <b>{{ comment.name}} : </b> {{ comment.content }}</h3> 
-         &nbsp; &nbsp; &nbsp;
-        <form action="" method="POST" id="main_form" class="comment_form">
-            <div class="reply">
-                <div class="w-50 p-3">
+    {% if comment.is_parent %}
+    <h3> <b>{{ comment.name}} : </b> {{ comment.content }}</h3>
+    &nbsp; &nbsp; &nbsp;
+    <form action="" method="POST" id="main_form" class="comment_form">
+        <div class="reply">
+            <div class="w-50 p-3">
                 <form method="post" class="post-form">
                     {% csrf_token %}
                     {{ form.as_p }}
                     <button type="reply">Add reply</button>
                 </form>
-                
+
             </div>
-        </form>
-        {% endif %} 
-         
-        {% for replies in comment.children %}
-            <h3>&nbsp; &nbsp; &nbsp; <b>{{ comment.author }} : </b> {{ replies.content }}</h3>
-        {% endfor %}
+    </form>
+    {% endif %}
+
+    {% for replies in comment.children %}
+    <h3>&nbsp; &nbsp; &nbsp; <b>{{ comment.author }} : </b> {{ replies.content }}</h3>
+    {% endfor %}
     {% endfor %}
 </article>
-{% endblock %}   
+{% endblock %}
