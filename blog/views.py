@@ -131,6 +131,11 @@ def edit_profile(request, slug):
         return render(request, 'blog/edit_profile.html',{'form': form} )    
 
 def show_category(request, slug):
+    CategoryData= category.objects.all()
+    if request.method=="GET":
+        st=request.GET.get('categorydata')
+        if st!= None:
+            CategoryData= category.objects.filter(categoty_title__icontains=st)
     post = Post.objects.filter(post, slug=slug)
     request_category = Category.objects.get(slug=slug)
     category = Category.objects.all()

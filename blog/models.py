@@ -16,7 +16,6 @@ class User(AbstractUser):
     country = models.CharField(max_length=16)
     phoneNumber = models.CharField(default=0, max_length=16)
     image = models.ImageField(upload_to='Profile_picture', null=True, blank=True)
-
     def __str__(self):
          return self.email
  
@@ -26,6 +25,7 @@ class Category(models.Model):
     slug = AutoSlugField(populate_from='name',unique=True)
     def __str__(self):
         return self.name
+    
 
 class Tags(models.Model):
     name = models.CharField(max_length=40)
@@ -49,6 +49,8 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+      
 
     
 class Comment(models.Model):
@@ -74,3 +76,4 @@ class Comment(models.Model):
         if self.parent is None:
             return True
         return False           
+
