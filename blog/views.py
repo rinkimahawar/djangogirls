@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from django.template.defaultfilters import slugify
 from django.shortcuts import redirect, render
-from datetime import datetime
+# from datetime import datetime
 from django.contrib.auth import update_session_auth_hash
 from django.utils import timezone
 from .models import Post, User,Category,Tags
@@ -61,6 +61,7 @@ def post_edit(request, slug):
             post = form.save(commit=False)
             post.user = request.user
             post.published_date = timezone.now()
+            post.tag.set(form.cleaned_data.get('tag'))
             post.save()
             return redirect('blog:post_detail', slug=post.slug)
     else:
@@ -101,7 +102,7 @@ def login_request(request):
 def logout_request(request):
 	logout(request)
 	messages.info(request, "You have successfully logged out.") 
-	return redirect("blog:login")
+	return redirect("blog/login")
 
 
 
@@ -131,33 +132,30 @@ def edit_profile(request, slug):
         return render(request, 'blog/edit_profile.html',{'form': form} )    
 
 def show_category(request, slug):
-    CategoryData= category.objects.all()
-    if request.method=="GET":
-        st=request.GET.get('categorydata')
-        if st!= None:
-            CategoryData= category.objects.filter(categoty_title__icontains=st)
     post = Post.objects.filter(post, slug=slug)
     request_category = Category.objects.get(slug=slug)
-    category = Category.objects.all()
+    categories = Category.objects.all()
     tags = Tags.objects.all()
     
     return render(request,'blog/categories.html',{'post':post,
-    'request_category':request_category,
-    'category':category,
+    'category':request_category,
+    'categories':categories,
     'tags':tags,
     })
 
 def tag(request,slug):
     post = Post.objects.filter(post, slug=slug)
+    print("55555555555555555555555")
     request_tag = Tags.objects.get(slug=slug)
-    category =Category.objects.all()
+    print(request_tag,"qqqqqqqqqqqqqqqqqqqqqqqqqqq")
+    categories =Category.objects.all()
     tags = Tags.objects.all()
+    print(tags,"eeeeeeeeeeeeeeeeeeeeeeeeeeeee")
 
     return render (request, 'blog/tag.html', {'post':post,
-    'request':request,
-    'request_tag':request_tag,
-    'category':category,
-    'Tags':tags,
+    'tag':request_tag,
+    'categories':categories,
+    'tags':tags,
     })
 
 

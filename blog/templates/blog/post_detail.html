@@ -22,7 +22,7 @@
         
         <div class=" col-md-6">
             <h2>{{ post.title }}</h2>
-            <h4>{{ post.category }}</h4>
+            <h5>{{ post.category }}</h5>
         </div>
     </div>
 
@@ -31,40 +31,33 @@
     <p>{{ post.text|linebreaksbr }}</p>
     <h5>Tags</h5>
     {% for tag in post.tag.all %}
-    <p>{{ tag }}</p>
+        <p>{{ tag }}</p>
     {% endfor %}
     <h4></h4>
     {% for comment in comments %}
-    <h5>comment</h5>
+    <h3>comment</h3>
     <div class="comment">
         <div class="w-50 p-3">
             <form method="post" class="post-form">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="comment">Add comment</button>
+                <button type="comment">submit</button>
             </form>
         </div>
     </div>
-    {% if user.is_authenticated %}
-    <form action="" method="POST" id="main_form" class="comment_form">
-        <div>
-            <label for="comment">Type Comment here</label>
-            {{ comment_form.content }} {% csrf_token %} <input type="submit" value="Post">
-        </div>
-        </div>
-    </form>
-    {% else %} <h2>You need to Login to comment</h2>
-    {% endif %}
 
     {% if comment.is_parent %}
     <h3> <b>{{ comment.name}} : </b> {{ comment.content }}</h3>
     &nbsp; &nbsp; &nbsp;
-    <form action="" method="POST" id="main_form" class="comment_form">
+    <form action="" method="POST" id="aptformButton-{{ comment.id }}" class="comment_form" style="display:none;">
+        <!-- reply form -->
         <div class="reply">
+            
             <div class="w-50 p-3">
                 <form method="post" class="post-form">
                     {% csrf_token %}
                     {{ form.as_p }}
+                    
                     <button type="reply">Add reply</button>
                 </form>
 
@@ -73,8 +66,16 @@
     {% endif %}
 
     {% for replies in comment.children %}
-    <h3>&nbsp; &nbsp; &nbsp; <b>{{ comment.author }} : </b> {{ replies.content }}</h3>
+    <h3>&nbsp; &nbsp; &nbsp; <b>{{ replies.author }} : </b> {{ replies.content }}</h3>
     {% endfor %}
     {% endfor %}
 </article>
+<script>
+    $(document).ready(function(){
+        $(document).on("click",".replay.form",function(){
+            const formId =$(this).attr('id');
+            $('#apt'.formId).toggle();
+        });
+    });
+</script>            
 {% endblock %}

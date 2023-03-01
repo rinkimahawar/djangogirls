@@ -16,6 +16,7 @@ class User(AbstractUser):
     country = models.CharField(max_length=16)
     phoneNumber = models.CharField(default=0, max_length=16)
     image = models.ImageField(upload_to='Profile_picture', null=True, blank=True)
+    
     def __str__(self):
          return self.email
  
@@ -23,6 +24,7 @@ class User(AbstractUser):
 class Category(models.Model):
     name = models.CharField(max_length=200)
     slug = AutoSlugField(populate_from='name',unique=True)
+
     def __str__(self):
         return self.name
     
@@ -30,6 +32,7 @@ class Category(models.Model):
 class Tags(models.Model):
     name = models.CharField(max_length=40)
     slug = AutoSlugField(populate_from='name',unique=True)
+
     def __str__(self):
         return self.name
 
