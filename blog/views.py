@@ -101,19 +101,15 @@ def login_request(request):
 
 def logout_request(request):
 	logout(request)
-	messages.info(request, "You have successfully logged out.") 
-	return redirect("blog/login")
-
-
-
- 
+	# messages.info(request, "You have successfully logged out.") 
+	return redirect("blog:login")
 
 def profile_view(request):
     user = request.user
     context = {
         'user': user,
     }
-    return render(request,'blog/view_profile.html', {'User':User}) 
+    return render(request,'blog/view_profile.html', context) 
 
 def edit_profile(request, slug):
     post=get_object_or_404(Post, slug=slug)
