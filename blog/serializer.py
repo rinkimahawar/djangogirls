@@ -3,16 +3,32 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from .models import Post
 from .models import *
+from blog.models import User
 
+class UserSerializers(serializers.ModelSerializer): 
+    password = serializers.CharField(write_only=True)
 
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            password=validated_data['password']
+        )
+        return user
 
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'password')
+        
+            
 class UserSerializer(serializers.ModelSerializer):
-    """ user serializer """
 
+    username = serializers.CharField(max_length=100)
+    password = serializers.CharField(write_only=True)
+    email = serializers.EmailField()
     token_detail = serializers.SerializerMethodField("get_token_detail")
     class Meta:
         model = User 
-        fields = ('id','email', 'name','username', 'phoneNumber', 'image','token_detail')
+        fields = ('id','email', 'name','username', 'phoneNumber','password', 'image','token_detail')
         extra_kwargs = {
             'token_detail': {'read_only': True},
         }
@@ -25,6 +41,12 @@ class UserSerializer(serializers.ModelSerializer):
     def get_user(self, request):
             user = request
             return user
+
+    def create(self, validated_data):
+        user = User(**validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+        return user   
     
  
 class PostSerializer(serializers.ModelSerializer):
@@ -40,7 +62,7 @@ class CommentSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ('id', 'name') 
+        fields = "__all__"
 
 class TagsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,3 +70,27 @@ class TagsSerializer(serializers.ModelSerializer):
         fields = ('id', 'name') 
 
 
+# class SignupSerializer(serializers.Serializer):
+#     password = serializers.CharField(style={'input_type': 'password'}, write_only =True)
+
+#     class Meta:
+#         model = User
+#         fields = ['username', 'email', 'name', 'password']
+#         extra_kwargs ={
+#                 'password': {'write_only': True}
+#         }
+
+#         def save(self):
+#             user=User(
+#                 email=self.validated_data['email'],
+#                 username=self.validated_data['username'],
+#             )
+#             print(user, 'QQQQQQQQQQQQQQQQQQQQQQQQQQ')
+#             password = self.validated_data['password']
+#             confirmpassword = self.validated_data['confirmpassword']
+#             if password != confirmpassword:
+#                 raise serializers.ValidationError({'password': 'password should be match!!'})  
+#             user.set_password(password)
+#             user.save()
+#             Token.objects.create(user=user)
+#             return user

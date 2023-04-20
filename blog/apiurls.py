@@ -1,14 +1,39 @@
-from django.urls import path
+from django.urls import path,include
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views as token_view
-# from .views import PostView
-from .api import *
-# from api import PostView
+from blog.api import SignupViewSett,postViewSet,SignupApiView
+from blog.api import *
+from django.urls import path
+# from .views import SignupViewSet
+from rest_framework import routers
 
+router = routers.DefaultRouter()
+router.register(r'signup', SignupViewSett)
+router.register(r'logout', logoutViewSet)
+router.register(r'login', loginViewSet)
+router.register(r'post', postViewSet)
+router.register(r'tags',TagsViewSet)
+router.register(r'category', CategoryViewSet)
+router.register(r'comment', CommentViewSet)
+router.register(r'user', UserViewSet)
 
 urlpatterns = [
+    path('', include(router.urls)),
+    
+    
+]
+urlpatterns = [
     # Auth APIs
-    path('signup_api/', SignupApiView.as_view(), name='signup-api'),
+    path('logout/',logoutViewSet.as_view({'post': 'create'})),
+    path('comment/<int:pk>/',CommentViewSet.as_view({'post': 'create'})),
+    path('Category/<int:pk>/',CategoryViewSet.as_view({'post': 'create'})),
+    path('Tags/<int:pk>/', TagsViewSet.as_view({'post': 'create'})),
+    path('login/',loginViewSet.as_view({'post': 'create'})),
+    path('post/',postViewSet.as_view({'post': 'create'})),
+    path('User/',UserViewSet.as_view({'post': 'create'})),
+    path('sign/', SignupViewSett.as_view({'post': 'create'}), name='sign'), 
+
+    path('signup_api/', SignupApiView.as_view(), name='signup-api'),      
     path('login_api/', LoginApiView.as_view(), name='login-api'),
     path('post_api/', PostApiView.as_view(), name='post_list'),    
     path('postttt_api/', PostApiView.as_view(), name='get_list'),
@@ -33,4 +58,10 @@ urlpatterns = [
     path('Categorydelete_api/<int:id>/', CategorydeleteApiView.as_view(), name='delete-Category'),
 ]
 
+
+    
+# urlpatterns += router.urls
+# router = DefaultRouter()
+# router.register(r'users', UserViewSet, basename='user')
+# urlpatterns = router.urls
 

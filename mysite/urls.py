@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('blog.urls')),
     path('polls/',include('polls.urls')),
-    path('api/',include('blog.apiurls')),
+    path('blog/',include('blog.apiurls')),
 
 ]
 # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
